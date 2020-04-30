@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -51,6 +52,7 @@ namespace WindowsFormsApp2
 
         private void toolStripButtonConnectionMysql_Click(object sender, EventArgs e)
         {
+            listView1.BackColor = Color.White;
             listView1.Items.Clear();
             string connectStr = "server=139.196.226.165;port=3306;database=test;user=admin;password=admin";
             MySqlConnection conn = new MySqlConnection(connectStr);
@@ -116,6 +118,7 @@ namespace WindowsFormsApp2
                     item.SubItems.Add(reader.GetString("CompletedNum"));
                     item.SubItems.Add(reader.GetString("SalesOrderNum"));
                     item.SubItems.Add(reader.GetString("CustomerCode"));
+                    item.SubItems.Add(reader.GetString("DocumentPath"));
 
                     listView1.Items.Add(item);
 
@@ -125,7 +128,7 @@ namespace WindowsFormsApp2
                 }
                 this.listView1.Items[this.listView1.Items.Count - 1].EnsureVisible();   //竖直滚动条拉到最下面
 
-                toolStripStatusLabel4.Text = "第  1  页";
+                toolStripStatusLabel4.Text = "共" + listView1.Items.Count.ToString() + "条数据";
             }
 
             catch (Exception ex)
@@ -247,6 +250,7 @@ namespace WindowsFormsApp2
             this.listView1.Columns.Add("完成数量", 100, HorizontalAlignment.Center);
             this.listView1.Columns.Add("销售单号", 100, HorizontalAlignment.Center);
             this.listView1.Columns.Add("客户代码", 100, HorizontalAlignment.Center);
+            this.listView1.Columns.Add("程序路径", 300, HorizontalAlignment.Center);
 
             this.listView1.BeginUpdate();   //数据更新，UI暂时挂起，直到EndUpdate绘制控件，可以有效避免闪烁并大大提高加载速度
 
@@ -280,8 +284,12 @@ namespace WindowsFormsApp2
 
 
             this.listView1.EndUpdate();  //结束数据处理，UI界面一次性绘制。
+            //this.listView1.BackColor = Color.AliceBlue;
+            //this.listView1.BackColor = Color.Beige;
+            this.listView1.BackColor = Color.Gainsboro;
 
-            this.listView1.ContextMenuStrip = contextMenuStrip1;
+
+            //this.listView1.ContextMenuStrip = contextMenuStrip1;  //这里不能直接赋值，不然没法控制显示条件
 
             this.toolStripStatusLabel1.Text = System.DateTime.Now.ToString();
             timer1.Interval = 1000;
@@ -330,10 +338,16 @@ namespace WindowsFormsApp2
                         OrderStatus = this.listView1.FocusedItem.SubItems[22].Text,
                         CompletedNum = this.listView1.FocusedItem.SubItems[23].Text,
                         SalesOrderNum = this.listView1.FocusedItem.SubItems[24].Text,
-                        CustomerCode = this.listView1.FocusedItem.SubItems[25].Text
+                        CustomerCode = this.listView1.FocusedItem.SubItems[25].Text,
+                        DocumentPath = this.listView1.FocusedItem.SubItems[26].Text
                     };
                     form.ShowDialog(this);
-                    toolStripButton1.PerformClick();
+                    //toolStripButton1.PerformClick();
+                    toolStripButton1_Click(sender, e);
+
+
+
+
                 }
             }
         }
@@ -400,6 +414,7 @@ namespace WindowsFormsApp2
                     listView1.SelectedItems[0].SubItems[23].Text = reader.GetString("CompletedNum");
                     listView1.SelectedItems[0].SubItems[24].Text = reader.GetString("SalesOrderNum");
                     listView1.SelectedItems[0].SubItems[25].Text = reader.GetString("CustomerCode");
+                    listView1.SelectedItems[0].SubItems[26].Text = reader.GetString("DocumentPath");
 
                     //while (reader.Read())   //遍历表中的数据
                     //{
@@ -531,6 +546,165 @@ namespace WindowsFormsApp2
                 MessageBox.Show("获取本机IP出错:" + ex.Message);
                 return "";
             }
+        }
+
+        private void listView1_MouseDown(object sender, MouseEventArgs e)
+        {
+            //if (e.Button == MouseButtons.Left)
+            //{
+            //    if (listView1.SelectedIndices != null && listView1.SelectedIndices.Count > 0)
+            //    //if(listView1.SelectedIndices.Count > 0)
+            //    {
+            //        toolStripStatusLabel4.Text = toolStripStatusLabel4.Text = "当前第" +listView1.Items[listView1.SelectedIndices[0]].Index.ToString() + "条数据";
+            //    }
+            //}
+        }
+
+        private void listView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            if (listView1.SelectedIndices != null && listView1.SelectedIndices.Count > 0)
+            {
+                toolStripStatusLabel4.Text = toolStripStatusLabel4.Text = "第" + (listView1.Items[listView1.SelectedIndices[0]].Index + 1).ToString() + "条数据";
+            }
+        }
+
+        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        {
+
+        }
+
+        private void listView1_MouseClick(object sender, MouseEventArgs e)
+        {
+            listView1.MultiSelect = false;
+            if(e.Button == MouseButtons.Right)
+            {
+                if (listView1.SelectedIndices != null && listView1.SelectedIndices.Count > 0)
+                {
+                    Point point = new Point(e.X, e.Y);
+                    this.contextMenuStrip1.Show(listView1, point);
+
+                }
+            }
+        }
+
+        private void 打开程序ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string desPath = "C:\\Users\\Administrator\\Desktop";
+            string scrPath = "E:\\ConfigCheckSumError";
+            if(CopyFolder2(scrPath, desPath) == 1)
+            {
+                //MessageBox.Show("复制成功");
+                string v_OpenFolderPath = @"C:\Users\Administrator\Desktop\ConfigCheckSumError";
+                System.Diagnostics.Process.Start("explorer.exe", v_OpenFolderPath);
+            }
+
+        }
+
+        private void CopyDir(string srcPath, string aimPath)
+        {
+            try
+            {
+                // 检查目标目录是否以目录分割字符结束如果不是则添加
+                if (aimPath[aimPath.Length - 1] != System.IO.Path.DirectorySeparatorChar)
+                {
+                    aimPath += System.IO.Path.DirectorySeparatorChar;
+                }
+                // 判断目标目录是否存在如果不存在则新建
+                if (!System.IO.Directory.Exists(aimPath))
+                {
+                    System.IO.Directory.CreateDirectory(aimPath);
+                }
+                // 得到源目录的文件列表，该里面是包含文件以及目录路径的一个数组
+                // 如果你指向copy目标文件下面的文件而不包含目录请使用下面的方法
+                // string[] fileList = Directory.GetFiles（srcPath）；
+                string[] fileList = System.IO.Directory.GetFileSystemEntries(srcPath);
+                // 遍历所有的文件和目录
+                foreach (string file in fileList)
+                {
+                    // 先当作目录处理如果存在这个目录就递归Copy该目录下面的文件
+                    if (System.IO.Directory.Exists(file))
+                    {
+                        CopyDir(file, aimPath + System.IO.Path.GetFileName(file));
+                    }
+                    // 否则直接Copy文件
+                    else
+                    {
+                        System.IO.File.Copy(file, aimPath + System.IO.Path.GetFileName(file), true);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// 复制文件夹及文件
+        /// </summary>
+        /// <param name="sourceFolder">原文件路径</param>
+        /// <param name="destFolder">目标文件路径</param>
+        /// <returns></returns>
+        public int CopyFolder2(string sourceFolder, string destFolder)
+        {
+            //string fileFullPath = @"c:\ttt\";
+            string fileFullPath = destFolder;
+
+            // 1、首先判断文件或者文件路径是否存在
+            if (File.Exists(fileFullPath))
+            {
+                // 2、根据路径字符串判断是文件还是文件夹
+                FileAttributes attr = File.GetAttributes(fileFullPath);
+                // 3、根据具体类型进行删除
+                if (attr == FileAttributes.Directory)
+                {
+                    // 3.1、删除文件夹
+                    Directory.Delete(fileFullPath, true);
+                }
+                else
+                {
+                    // 3.2、删除文件
+                    File.Delete(fileFullPath);
+                }
+                File.Delete(fileFullPath);
+            }
+
+            try
+            {
+                string folderName = System.IO.Path.GetFileName(sourceFolder);
+                string destfolderdir = System.IO.Path.Combine(destFolder, folderName);
+                string[] filenames = System.IO.Directory.GetFileSystemEntries(sourceFolder);
+                foreach (string file in filenames)// 遍历所有的文件和目录
+                {
+                    if (System.IO.Directory.Exists(file))
+                    {
+                        string currentdir = System.IO.Path.Combine(destfolderdir, System.IO.Path.GetFileName(file));
+                        if (!System.IO.Directory.Exists(currentdir))
+                        {
+                            System.IO.Directory.CreateDirectory(currentdir);
+                        }
+                        CopyFolder2(file, destfolderdir);
+                    }
+                    else
+                    {
+                        string srcfileName = System.IO.Path.Combine(destfolderdir, System.IO.Path.GetFileName(file));
+                        if (!System.IO.Directory.Exists(destfolderdir))
+                        {
+                            System.IO.Directory.CreateDirectory(destfolderdir);
+                        }
+                        System.IO.File.Copy(file, srcfileName);
+                    }
+                }
+
+                return 1;
+            }
+            catch (Exception e)
+            {
+
+                MessageBox.Show(e.Message);
+                return 0;
+            }
+
         }
     }
 }

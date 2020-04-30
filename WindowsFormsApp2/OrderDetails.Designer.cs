@@ -81,8 +81,7 @@
             this.label32 = new System.Windows.Forms.Label();
             this.textBoxLabelType = new System.Windows.Forms.TextBox();
             this.label33 = new System.Windows.Forms.Label();
-            this.buttonModify = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBoxDocumentPath = new System.Windows.Forms.TextBox();
             this.label18 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -515,22 +514,12 @@
             this.label33.TabIndex = 33;
             this.label33.Text = "外盒标签";
             // 
-            // buttonModify
+            // textBoxDocumentPath
             // 
-            this.buttonModify.Location = new System.Drawing.Point(707, 449);
-            this.buttonModify.Name = "buttonModify";
-            this.buttonModify.Size = new System.Drawing.Size(75, 23);
-            this.buttonModify.TabIndex = 53;
-            this.buttonModify.Text = "修改";
-            this.buttonModify.UseVisualStyleBackColor = true;
-            this.buttonModify.Click += new System.EventHandler(this.buttonModify_Click);
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(149, 408);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(253, 21);
-            this.textBox1.TabIndex = 55;
+            this.textBoxDocumentPath.Location = new System.Drawing.Point(149, 408);
+            this.textBoxDocumentPath.Name = "textBoxDocumentPath";
+            this.textBoxDocumentPath.Size = new System.Drawing.Size(253, 21);
+            this.textBoxDocumentPath.TabIndex = 55;
             // 
             // label18
             // 
@@ -546,9 +535,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(844, 484);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.textBoxDocumentPath);
             this.Controls.Add(this.label18);
-            this.Controls.Add(this.buttonModify);
             this.Controls.Add(this.textBoxCustomerCode);
             this.Controls.Add(this.label24);
             this.Controls.Add(this.textBoxSalesOrderNum);
@@ -602,12 +590,15 @@
             this.Controls.Add(this.textBoxNo);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "OrderDetails";
+            this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "OrderDetailsModify";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OrderDetails_FormClosing);
             this.Load += new System.EventHandler(this.OrderDetails_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -669,8 +660,7 @@
         private System.Windows.Forms.Label label32;
         private System.Windows.Forms.TextBox textBoxLabelType;
         private System.Windows.Forms.Label label33;
-        private System.Windows.Forms.Button buttonModify;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBoxDocumentPath;
         private System.Windows.Forms.Label label18;
     }
 }

@@ -150,7 +150,7 @@ namespace WindowsFormsApp2
 
             if (!ordernew.Equals(orderold))
             {
-                DialogResult dr = MessageBox.Show("您要保存对此数据的改变吗", "确认", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                DialogResult dr = MessageBox.Show("您要保存对此数据的改变吗？", "确认", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
                 if (dr == DialogResult.Cancel)
                 {
                     e.Cancel = true;
@@ -192,7 +192,7 @@ namespace WindowsFormsApp2
                             ordernew.CompletedNum,
                             ordernew.SalesOrderNum,
                             ordernew.CustomerCode,
-                            ordernew.DocumentPath,
+                            ordernew.DocumentPath.Replace("\\", "\\\\"),
                             ordernew.OrderNum
                             );
                         //string sqlstr = "SELECT * FROM OrderList";  //选择数据库表

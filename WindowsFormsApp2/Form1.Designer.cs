@@ -66,21 +66,23 @@
             this.导入数据ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripButton11 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton10 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripTextBox1 = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripButton12 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton13 = new System.Windows.Forms.ToolStripButton();
             this.statusStrip2 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.listView1 = new System.Windows.Forms.ListView();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.打开程序ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.打印小标签ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.timer2 = new System.Windows.Forms.Timer(this.components);
-            this.toolStripTextBox1 = new System.Windows.Forms.ToolStripTextBox();
+            this.listView1 = new WindowsFormsApp2.ListViewNF();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -138,6 +140,7 @@
             this.退出ToolStripMenuItem.Name = "退出ToolStripMenuItem";
             this.退出ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.退出ToolStripMenuItem.Text = "退出";
+            this.退出ToolStripMenuItem.Click += new System.EventHandler(this.退出ToolStripMenuItem_Click);
             // 
             // 查看ToolStripMenuItem
             // 
@@ -298,7 +301,7 @@
             this.toolStripStatusLabel7,
             this.toolStripStatusLabel6,
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 708);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 707);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(1008, 22);
             this.statusStrip1.TabIndex = 2;
@@ -356,8 +359,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tableLayoutPanel1);
-            this.splitContainer1.Size = new System.Drawing.Size(1008, 640);
-            this.splitContainer1.SplitterDistance = 149;
+            this.splitContainer1.Size = new System.Drawing.Size(1008, 639);
+            this.splitContainer1.SplitterDistance = 91;
             this.splitContainer1.SplitterWidth = 3;
             this.splitContainer1.TabIndex = 3;
             // 
@@ -366,7 +369,7 @@
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(149, 640);
+            this.treeView1.Size = new System.Drawing.Size(91, 639);
             this.treeView1.TabIndex = 0;
             // 
             // tableLayoutPanel1
@@ -384,7 +387,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(856, 640);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(914, 639);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // toolStrip2
@@ -395,13 +398,15 @@
             this.toolStripButton2,
             this.toolStripButton1,
             this.toolStripLabel3,
+            this.toolStripButton11,
             this.toolStripButton10,
             this.toolStripTextBox1,
-            this.toolStripButton12});
+            this.toolStripButton12,
+            this.toolStripButton13});
             this.toolStrip2.Location = new System.Drawing.Point(0, 0);
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.toolStrip2.Size = new System.Drawing.Size(856, 25);
+            this.toolStrip2.Size = new System.Drawing.Size(914, 25);
             this.toolStrip2.TabIndex = 0;
             this.toolStrip2.Text = "toolStrip2";
             this.toolStrip2.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolStrip2_ItemClicked);
@@ -458,6 +463,16 @@
             this.toolStripLabel3.Size = new System.Drawing.Size(12, 22);
             this.toolStripLabel3.Text = " ";
             // 
+            // toolStripButton11
+            // 
+            this.toolStripButton11.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripButton11.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton11.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton11.Image")));
+            this.toolStripButton11.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton11.Name = "toolStripButton11";
+            this.toolStripButton11.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton11.Text = "toolStripButton11";
+            // 
             // toolStripButton10
             // 
             this.toolStripButton10.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
@@ -467,6 +482,16 @@
             this.toolStripButton10.Name = "toolStripButton10";
             this.toolStripButton10.Size = new System.Drawing.Size(23, 22);
             this.toolStripButton10.Text = "toolStripButton10";
+            // 
+            // toolStripTextBox1
+            // 
+            this.toolStripTextBox1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripTextBox1.BackColor = System.Drawing.SystemColors.Window;
+            this.toolStripTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.toolStripTextBox1.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+            this.toolStripTextBox1.Name = "toolStripTextBox1";
+            this.toolStripTextBox1.Size = new System.Drawing.Size(25, 25);
+            this.toolStripTextBox1.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // toolStripButton12
             // 
@@ -478,6 +503,16 @@
             this.toolStripButton12.Size = new System.Drawing.Size(23, 22);
             this.toolStripButton12.Text = "toolStripButton12";
             // 
+            // toolStripButton13
+            // 
+            this.toolStripButton13.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripButton13.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton13.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton13.Image")));
+            this.toolStripButton13.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton13.Name = "toolStripButton13";
+            this.toolStripButton13.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton13.Text = "toolStripButton13";
+            // 
             // statusStrip2
             // 
             this.statusStrip2.BackColor = System.Drawing.SystemColors.Control;
@@ -486,9 +521,9 @@
             this.toolStripProgressBar1,
             this.toolStripStatusLabel3,
             this.toolStripStatusLabel4});
-            this.statusStrip2.Location = new System.Drawing.Point(0, 618);
+            this.statusStrip2.Location = new System.Drawing.Point(0, 617);
             this.statusStrip2.Name = "statusStrip2";
-            this.statusStrip2.Size = new System.Drawing.Size(856, 22);
+            this.statusStrip2.Size = new System.Drawing.Size(914, 22);
             this.statusStrip2.SizingGrip = false;
             this.statusStrip2.TabIndex = 1;
             this.statusStrip2.Text = "statusStrip2";
@@ -509,30 +544,13 @@
             this.toolStripStatusLabel3.MergeIndex = 0;
             this.toolStripStatusLabel3.Name = "toolStripStatusLabel3";
             this.toolStripStatusLabel3.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.toolStripStatusLabel3.Size = new System.Drawing.Size(683, 17);
+            this.toolStripStatusLabel3.Size = new System.Drawing.Size(741, 17);
             this.toolStripStatusLabel3.Spring = true;
             // 
             // toolStripStatusLabel4
             // 
             this.toolStripStatusLabel4.Name = "toolStripStatusLabel4";
             this.toolStripStatusLabel4.Size = new System.Drawing.Size(0, 17);
-            // 
-            // listView1
-            // 
-            this.listView1.Alignment = System.Windows.Forms.ListViewAlignment.Default;
-            this.listView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listView1.FullRowSelect = true;
-            this.listView1.Location = new System.Drawing.Point(0, 25);
-            this.listView1.Margin = new System.Windows.Forms.Padding(0);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(856, 590);
-            this.listView1.TabIndex = 2;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.listView1_ItemSelectionChanged);
-            this.listView1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseClick);
-            this.listView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseDoubleClick);
-            this.listView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseDown);
             // 
             // timer1
             // 
@@ -544,13 +562,13 @@
             this.打开程序ToolStripMenuItem,
             this.打印小标签ToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 70);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(137, 48);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // 打开程序ToolStripMenuItem
             // 
             this.打开程序ToolStripMenuItem.Name = "打开程序ToolStripMenuItem";
-            this.打开程序ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.打开程序ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.打开程序ToolStripMenuItem.Text = "打开程序";
             this.打开程序ToolStripMenuItem.Click += new System.EventHandler(this.打开程序ToolStripMenuItem_Click);
             // 
@@ -559,6 +577,7 @@
             this.打印小标签ToolStripMenuItem.Name = "打印小标签ToolStripMenuItem";
             this.打印小标签ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.打印小标签ToolStripMenuItem.Text = "打印小标签";
+            this.打印小标签ToolStripMenuItem.Click += new System.EventHandler(this.打印小标签ToolStripMenuItem_Click);
             // 
             // imageList1
             // 
@@ -576,32 +595,46 @@
             this.timer2.Interval = 2000;
             this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
             // 
-            // toolStripTextBox1
+            // listView1
             // 
-            this.toolStripTextBox1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripTextBox1.BackColor = System.Drawing.SystemColors.Window;
-            this.toolStripTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.toolStripTextBox1.Name = "toolStripTextBox1";
-            this.toolStripTextBox1.Size = new System.Drawing.Size(25, 25);
-            this.toolStripTextBox1.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.listView1.Alignment = System.Windows.Forms.ListViewAlignment.Default;
+            this.listView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listView1.FullRowSelect = true;
+            this.listView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.listView1.HideSelection = false;
+            this.listView1.Location = new System.Drawing.Point(0, 25);
+            this.listView1.Margin = new System.Windows.Forms.Padding(0);
+            this.listView1.Name = "listView1";
+            this.listView1.OwnerDraw = true;
+            this.listView1.Size = new System.Drawing.Size(914, 589);
+            this.listView1.TabIndex = 2;
+            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.listView1.View = System.Windows.Forms.View.Details;
+            this.listView1.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.listView1_DrawColumnHeader);
+            this.listView1.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.listView1_DrawItem);
+            this.listView1.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.listView1_ItemSelectionChanged);
+            this.listView1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseClick);
+            this.listView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseDoubleClick);
+            this.listView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseDown);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.Control;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
-            this.ClientSize = new System.Drawing.Size(1008, 730);
+            this.ClientSize = new System.Drawing.Size(1008, 729);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Order Management System";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
@@ -640,7 +673,8 @@
         private System.Windows.Forms.TreeView treeView1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.StatusStrip statusStrip2;
-        private System.Windows.Forms.ListView listView1;
+        //private System.Windows.Forms.ListView listView1;
+        private ListViewNF listView1;
         private System.Windows.Forms.ToolStripMenuItem 关于ToolStripMenuItem;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.ToolStripButton toolStripButton3;
@@ -677,6 +711,8 @@
         private System.Windows.Forms.Timer timer2;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel8;
         private System.Windows.Forms.ToolStripTextBox toolStripTextBox1;
+        private System.Windows.Forms.ToolStripButton toolStripButton11;
+        private System.Windows.Forms.ToolStripButton toolStripButton13;
     }
 }
 

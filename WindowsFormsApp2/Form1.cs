@@ -10,14 +10,28 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace WindowsFormsApp2
 {
+    //public partial class Form1 : MetroFramework.Forms.MetroForm
     public partial class Form1 : Form
     {
+
+        private BarTender.Application btAPP;    //导入Bartender对象调用打印机
+        private BarTender.Format btFormat;
+
+        [DllImport("User32.dll")]
+        private static extern IntPtr GetWindowDC(IntPtr hwnd);
+
+        [DllImport("User32.dll")]
+        private static extern int ReleaseDC(IntPtr hwnd, IntPtr hdc);
+
+
+
         private int i = 0;
         public Form1()
         {
@@ -27,6 +41,53 @@ namespace WindowsFormsApp2
             toolStripProgressBar1.Step = 1;
 
         }
+
+        //protected override void WndProc(ref Message m)
+        //{
+        //    if (m.Msg == 0x20)
+        //        Console.WriteLine(m.ToString());
+        //    base.WndProc(ref m);
+        //    switch (m.Msg)
+        //    {
+        //        case 0x84:
+        //            //这里是鼠标的移动事件
+        //            break;
+        //        case 0x86://WM_NCACTIVATE
+        //            goto case 0x85;
+        //        case 0x85://WM_NCPAINT
+        //                  //获得标题栏大小
+        //            Size si = new Size(SystemInformation.CaptionButtonSize.Width, SystemInformation.CaptionButtonSize.Height);
+        //            IntPtr hDC = GetWindowDC(m.HWnd);
+
+        //            //把DC转换为.NET的Graphics就可以很方便地使用Framework提供的绘图功能了
+        //            Graphics gs = Graphics.FromHdc(hDC);
+        //            Image img = Image.FromFile("MenuStripBackColor.png");
+
+        //            //显示背景图片
+        //            //gs.DrawImage(img, 0, 0);
+        //            gs.DrawImage(img, 0, 0, 50, SystemInformation.CaptionHeight);
+
+        //            //画按钮
+        //            //gs.FillRectangle(new SolidBrush(Color.Red), m_rect);
+        //            //gs.FillRectangle(new LinearGradientBrush(m_rect, Color.Pink, Color.Purple, LinearGradientMode.BackwardDiagonal), m_rect);
+        //            //StringFormat strFmt = new StringFormat();
+        //            //strFmt.Alignment = StringAlignment.Center;
+        //            //strFmt.LineAlignment = StringAlignment.Center;
+        //            //gs.DrawString("√", this.Font, Brushes.BlanchedAlmond, m_rect, strFmt);
+        //            gs.Dispose();
+
+        //            //释放GDI资源
+        //            ReleaseDC(m.HWnd, hDC);
+        //            break;
+        //        case 0xA1://WM_NCLBUTTONDOWN
+        //            Point mousePoint = new Point((int)m.LParam);
+        //            mousePoint.Offset(-this.Left, -this.Top);
+        //            //if (m_rect.Contains(mousePoint))
+        //            //    MessageBox.Show("hello");
+        //            break;
+
+        //    }
+        //}
         /// <summary>
         /// 去除toolStript控件下面的白色细线，采用重绘的方法
         /// </summary>
@@ -45,14 +106,14 @@ namespace WindowsFormsApp2
         {
             if ((sender as ToolStrip).RenderMode == ToolStripRenderMode.System)
             {
-                Rectangle rect = new Rectangle(0, 0, this.toolStrip2.Width, this.toolStrip2.Height - 1);
+                Rectangle rect = new Rectangle(0, 0, this.toolStrip2.Width, this.toolStrip2.Height - 3);
                 e.Graphics.SetClip(rect);
             }
         }
 
         private void toolStripButtonConnectionMysql_Click(object sender, EventArgs e)
         {
-            listView1.BackColor = Color.White;
+            //listView1.BackColor = Color.White;
             listView1.Items.Clear();
             string connectStr = "server=139.196.226.165;port=3306;database=test;user=admin;password=admin";
             MySqlConnection conn = new MySqlConnection(connectStr);
@@ -144,6 +205,14 @@ namespace WindowsFormsApp2
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            btAPP = new BarTender.Application();    //初始化Bartender对象
+
+            //this.Text = ""; //设置标题栏文本为空
+            //ControlBox = false; //不在窗体标题栏中显示控件
+            //this.FormBorderStyle = FormBorderStyle.None;
+
+
+
             TreeNode treeNoderoot1 = this.treeView1.Nodes.Add("一月份订单");
             for (int i = 1; i < 32; i++)
             {
@@ -223,7 +292,7 @@ namespace WindowsFormsApp2
             this.listView1.View = View.Details;     //设置显示方式
             this.listView1.Scrollable = true;   //是否自动显示滚动条
             this.listView1.MultiSelect = false; //是否选中多行
-
+            //this.listView1.ForeColor = Color.Red;
             this.listView1.Columns.Add("#", 40, HorizontalAlignment.Center);
             this.listView1.Columns.Add("订单编号", 60, HorizontalAlignment.Center);
             this.listView1.Columns.Add("订单日期", 80, HorizontalAlignment.Center);
@@ -250,7 +319,7 @@ namespace WindowsFormsApp2
             this.listView1.Columns.Add("完成数量", 100, HorizontalAlignment.Center);
             this.listView1.Columns.Add("销售单号", 100, HorizontalAlignment.Center);
             this.listView1.Columns.Add("客户代码", 100, HorizontalAlignment.Center);
-            this.listView1.Columns.Add("程序路径", 300, HorizontalAlignment.Center);
+            this.listView1.Columns.Add("程序路径", 500, HorizontalAlignment.Center);
 
             this.listView1.BeginUpdate();   //数据更新，UI暂时挂起，直到EndUpdate绘制控件，可以有效避免闪烁并大大提高加载速度
 
@@ -589,13 +658,32 @@ namespace WindowsFormsApp2
 
         private void 打开程序ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string desPath = "C:\\Users\\Administrator\\Desktop";
-            string scrPath = "E:\\ConfigCheckSumError";
-            if(CopyFolder2(scrPath, desPath) == 1)
+            string DesktopDir = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);  //获取当前用户的桌面路径
+            // 检查桌面目录是否以目录分割字符结束如果不是则添加
+            if (DesktopDir[DesktopDir.Length - 1] != System.IO.Path.DirectorySeparatorChar)
+            {
+                DesktopDir += System.IO.Path.DirectorySeparatorChar;
+            }
+            string ScrPath = listView1.SelectedItems[0].SubItems[26].Text;  //获取listview1中的源程序路径
+            if(ScrPath == "")
+            {
+                return;
+            }
+
+            string folderName = System.IO.Path.GetFileName(ScrPath);
+            string destfolderdir = System.IO.Path.Combine(DesktopDir, folderName);
+            if(System.IO.Directory.Exists(destfolderdir))   //如果文件夹已经复制，则删除
+            {
+                Directory.Delete(destfolderdir, true);
+            }
+
+            //string desPath = "C:\\Users\\Administrator\\Desktop";
+            //string scrPath = "E:\\ConfigCheckSumError";
+            if (CopyFolder2(ScrPath, DesktopDir) == 1)  //如果复制程序成功则打开
             {
                 //MessageBox.Show("复制成功");
-                string v_OpenFolderPath = @"C:\Users\Administrator\Desktop\ConfigCheckSumError";
-                System.Diagnostics.Process.Start("explorer.exe", v_OpenFolderPath);
+                //string v_OpenFolderPath = @"C:\Users\Administrator\Desktop\ConfigCheckSumError";
+                System.Diagnostics.Process.Start("explorer.exe", destfolderdir);
             }
 
         }
@@ -705,6 +793,93 @@ namespace WindowsFormsApp2
                 return 0;
             }
 
+        }
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void 退出ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void Form1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// 自绘标题
+        /// https://docs.microsoft.com/en-us/dotnet/api/system.windows.forms.listview.ownerdraw?redirectedfrom=MSDN&view=netcore-3.1#System_Windows_Forms_ListView_OwnerDraw
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void listView1_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
+        {
+            //e.Graphics.FillRectangle(Brushes.AliceBlue, e.Bounds);
+            ////e.DrawText();
+            //e.DrawText(TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter);
+            
+
+            using (StringFormat sf = new StringFormat())
+            {
+                // Store the column text alignment, letting it default
+                // to Left if it has not been set to Center or Right.
+                switch (e.Header.TextAlign)
+                {
+                    case HorizontalAlignment.Center:
+                        sf.Alignment = StringAlignment.Center;
+                        break;
+                    case HorizontalAlignment.Right:
+                        sf.Alignment = StringAlignment.Far;
+                        break;
+                }
+
+
+                // Draw the standard header background.
+
+                e.DrawBackground();
+
+                // Draw the header text.
+                using (Font headerFont = new Font("Helvetica", 8, FontStyle.Bold))
+                {
+                    //sf.FormatFlags = StringFormatFlags.DirectionVertical;
+                    sf.LineAlignment = StringAlignment.Center;
+                    e.Graphics.DrawString(e.Header.Text, headerFont, Brushes.Red, e.Bounds, sf);
+                }
+            }
+
+            return;
+        }
+
+        private void listView1_DrawItem(object sender, DrawListViewItemEventArgs e)
+        {
+            e.DrawDefault = true;
+        }
+
+        private void 打印小标签ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                btFormat = btAPP.Formats.Open(System.Windows.Forms.Application.StartupPath + @"\Test.btw", false, "");
+                btFormat.PrintSetup.IdenticalCopiesOfLabel = 1;//打印份数
+                btFormat.PrintSetup.NumberSerializedLabels = 1;//序列标签数
+                btFormat.SetNamedSubStringValue("打印文本", listView1.SelectedItems[0].SubItems[20].Text.Trim());
+                //btFormat.SetNamedSubStringValue("打印条码", txtBarcode.Text.Trim());
+                btFormat.PrintOut(true, false);//第二个false设置打印时是否跳出打印属性
+                btFormat.Close(BarTender.BtSaveOptions.btSaveChanges); //退出时是否保存标签
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            btAPP.Quit(BarTender.BtSaveOptions.btSaveChanges);//界面退出时同步退出bartender进程
         }
     }
 }

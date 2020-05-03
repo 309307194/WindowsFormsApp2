@@ -516,15 +516,15 @@
             // 
             // textBoxDocumentPath
             // 
-            this.textBoxDocumentPath.Location = new System.Drawing.Point(149, 408);
+            this.textBoxDocumentPath.Location = new System.Drawing.Point(149, 447);
             this.textBoxDocumentPath.Name = "textBoxDocumentPath";
-            this.textBoxDocumentPath.Size = new System.Drawing.Size(253, 21);
+            this.textBoxDocumentPath.Size = new System.Drawing.Size(633, 21);
             this.textBoxDocumentPath.TabIndex = 55;
             // 
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(90, 411);
+            this.label18.Location = new System.Drawing.Point(90, 450);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(53, 12);
             this.label18.TabIndex = 54;
@@ -534,7 +534,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(844, 484);
+            this.ClientSize = new System.Drawing.Size(844, 817);
             this.Controls.Add(this.textBoxDocumentPath);
             this.Controls.Add(this.label18);
             this.Controls.Add(this.textBoxCustomerCode);
@@ -597,7 +597,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "OrderDetailsModify";
+            this.Text = "OrderDetails";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OrderDetails_FormClosing);
             this.Load += new System.EventHandler(this.OrderDetails_Load);
             this.ResumeLayout(false);
